@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+import matplotlib.pyplot as plt
 from sklearn.model_selection import (
     train_test_split,
     cross_val_score,
@@ -248,6 +249,22 @@ class BreastCancerClassifier:
         print(f"\n CLASSIFICATION REPORT:")
         print(classification_report(self.y_test, y_pred, target_names=self.class_names))
 
+        # Dataframe for visualization
+        metrics_df = pd.DataFrame({
+            'Metric': ['Sensitivity (Recall)', 'Specificity', 'Precision'],
+            'Value': [sensitivity, specificity, precision]
+        })
+
+        # Draw diagram
+        plt.figure(figsize=(8, 6))
+        plt.bar(metrics_df['Metric'], metrics_df['Value'], color='skyblue')
+        plt.ylim(0, 1.1)
+        plt.title('Detailed Classification Metrics')
+        plt.ylabel('Score')
+        plt.grid(axis='y', linestyle='--', alpha=0.7)
+        plt.tight_layout()
+        plt.show()
+
         # Feature importance (if available)
         self._show_feature_importance()
 
@@ -261,6 +278,8 @@ class BreastCancerClassifier:
             'predictions': y_pred,
             'probabilities': y_pred_proba
         }
+
+
 
         return self.results
 
@@ -350,11 +369,12 @@ class BreastCancerClassifier:
         results = self.evaluate_model()
 
         print(f"\nANALYSIS COMPLETE!")
-        print("=" * 30)
         print(f"Best Model: Logistic Regression")
         print(f"Test Accuracy: {results['accuracy']:.4f}")
         print(f"ROC-AUC Score: {results['roc_auc']:.4f}")
         print(f"Model can be used for predictions!")
+
+
 
         return results, grid_search
 
@@ -362,10 +382,8 @@ class BreastCancerClassifier:
 
 
 # Example usage
-
 if __name__ == "__main__":
     print("SCIKIT-LEARN BREAST CANCER CLASSIFICATION")
-    print("=" * 60)
 
     # Create classifier
     classifier = BreastCancerClassifier(random_state=42)
